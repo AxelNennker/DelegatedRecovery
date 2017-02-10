@@ -199,10 +199,9 @@
         </section>
         <!-- Email Recovery -->
         <section title="Federated Authentication">
-          <t>Federated systems for authentication take many forms and solve
-          the problem of account recovery (or at least delegate it implicitly
-          to the Identity Provider). However, after fifteen years of
-          widespread deployment of such systems, we see few mainstream
+          <t>Federated systems for authentication take many forms and delegate 
+          authentication to the Identity Provider). This moves the problem of users forgetting their password at the IdP.
+          After fifteen years of widespread deployment of such systems, we see few mainstream
           services that are willing to rely exclusively on federated logins
           for a variety of reasons.
           <list style="symbols">
@@ -222,6 +221,7 @@
             active users are or not desire to show a competitor's logo as
             part of their login process.</t>
           </list></t>
+          <t>As upto this writing (2017) federated systems are not used for account recovery between identity providers</t>
         </section>
         <!-- Federated Authentication -->
         <section title="Alternate Methods">
