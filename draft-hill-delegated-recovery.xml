@@ -3,6 +3,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd' [
   <!ENTITY iso.8601.1988 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml2/reference.ISO.8601.1988.xml">
   <!ENTITY OpenID.Core PUBLIC '' 'https://openid.net/bibxml/reference.OpenID.Core.xml'>
+  <!ENTITY OpenID.Discovery PUBLIC '' 'https://openid.net/bibxml/reference.OpenID.Discovery.xml'>
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -27,8 +28,8 @@
       </address>
     </author>
     <date year="2017"
-          month="January"
-          day="24" />
+          month="February"
+          day="10" />
     <workgroup>Facebook, Inc.</workgroup>
     <abstract>
       <t>Delegated Account Recovery allows an application to delegate the
@@ -224,6 +225,7 @@
           <t>To implement Account Recovery the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
           <t>OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</t>
           <t>Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</t>
+          <t>The keys are discovered using the <xref target="OpenID.Discovery">OpenID Connect Discovery Protocol</xref></t>
           <section title="Example User Flow"><t>
             <list style="symbols">
             <t>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</t>
@@ -237,6 +239,8 @@
           <t>As in the previous scenario the Service Provider's (own) IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</t>
           <t>And again the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
           <t>The difference to the previous scenario is that the Service Provider establishes a user specific relationship with the Recovery Provider.</t>
+          <t>OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</t>
+          <t>Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</t>
           <section title="Example User Flow of the Recovery Setup"><t>
             <list style="symbols">
             <t>The Service Provider adds a "Add Password Recovery with 'Recovery Provider' to your Account" to their Registration Page.</t>
@@ -1768,6 +1772,7 @@ countersigned_token_internals = struct {
       <?rfc include="reference.RFC.7469"?>
       &iso.8601.1988;
       &OpenID.Core;
+      &OpenID.Discovery;
     <reference anchor="SEC1"
                target="http://www.secg.org/collateral/sec1_final.pdf">
       <front>
