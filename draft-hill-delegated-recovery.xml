@@ -216,6 +216,13 @@
           Identity Providers and then creating their own local account rarely allow users
           to recover their account by IdP login.</t>
         </section>
+        <section title="Federated Account Recovery using a Common Identifier">
+          <t>Service Providers are well advised to separate authentication and authorization from the API their service provides.
+          This allows them to concentrate on their API and their service while implementing authentication and authorization using available OpenID Connect libraries.</t>
+          <t>In this scenario an IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</t>
+          <t>The user's identifier e.g. their email address or telefon number is used at both the Service Provider and the Recovery Provider.</t>
+          <t>For Account Recovery they now create a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
+        </section>
         <!-- Federated Authentication -->
         <section title="Alternate Methods">
           <t>Methods do exist to strongly re-authenticate an account holder
