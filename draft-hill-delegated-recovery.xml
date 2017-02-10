@@ -221,8 +221,11 @@
             active users are or not desire to show a competitor's logo as
             part of their login process.</t>
           </list></t>
-          <t>As upto this writing (2017) federated systems are not used for account recovery between identity providers.</t>
-          <t>Also Service Providers allowing onboarding to the service using Identity Providers and then creating their own local account rarely allow user to recover their account by IdP login.</t>
+          <t>As upto this writing (2017) federated systems are not used for account 
+          recovery between identity providers.</t>
+          <t>Also Service Providers allowing onboarding to the service using 
+          Identity Providers and then creating their own local account rarely allow users
+          to recover their account by IdP login.</t>
         </section>
         <!-- Federated Authentication -->
         <section title="Alternate Methods">
