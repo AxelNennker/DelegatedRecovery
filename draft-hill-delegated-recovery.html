@@ -12,28 +12,6 @@
 	  a {
 	  text-decoration: none;
 	  }
-      /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
-      a.info {
-          /* This is the key. */
-          position: relative;
-          z-index: 24;
-          text-decoration: none;
-      }
-      a.info:hover {
-          z-index: 25;
-          color: #FFF; background-color: #900;
-      }
-      a.info span { display: none; }
-      a.info:hover span.info {
-          /* The span will display just on :hover state. */
-          display: block;
-          position: absolute;
-          font-size: smaller;
-          top: 2em; left: -5em; width: 15em;
-          padding: 2px; border: 1px solid #333;
-          color: #900; background-color: #EEE;
-          text-align: left;
-      }
 	  a.smpl {
 	  color: black;
 	  }
@@ -340,7 +318,7 @@
 	
 	  @page {
 	  @top-left {
-		   content: "Unofficial Draft"; 
+		   content: "Internet-Draft"; 
 	  } 
 	  @top-right {
 		   content: "December 2010"; 
@@ -382,7 +360,9 @@
 <link href="#rfc.section.1.2.2" rel="Chapter" title="1.2.2 Password Hints"/>
 <link href="#rfc.section.1.2.3" rel="Chapter" title="1.2.3 Email Recovery"/>
 <link href="#rfc.section.1.2.4" rel="Chapter" title="1.2.4 Federated Authentication"/>
-<link href="#rfc.section.1.2.5" rel="Chapter" title="1.2.5 Alternate Methods"/>
+<link href="#rfc.section.1.2.5" rel="Chapter" title="1.2.5 Federated Account Recovery using a Common Identifier"/>
+<link href="#rfc.section.1.2.6" rel="Chapter" title="1.2.6 Federated Account Recovery"/>
+<link href="#rfc.section.1.2.7" rel="Chapter" title="1.2.7 Alternate Methods"/>
 <link href="#rfc.section.1.3" rel="Chapter" title="1.3 Relationship to Other Protocols"/>
 <link href="#rfc.section.1.4" rel="Chapter" title="1.4 Goals"/>
 <link href="#rfc.section.1.5" rel="Chapter" title="1.5 Roles"/>
@@ -432,7 +412,7 @@
 <link href="#rfc.appendix.A" rel="Chapter" title="A Initial Algorithm Registry Contents"/>
 
 
-  <meta name="generator" content="xml2rfc version 2.4.8 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.4.3 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Hill, B., Ed." />
@@ -453,11 +433,11 @@
   <td class="right">B. Hill, Ed.</td>
 </tr>
 <tr>
-  <td class="left">Unofficial Draft</td>
+  <td class="left">Internet-Draft</td>
   <td class="right">Facebook, Inc.</td>
 </tr>
 <tr>
-  <td class="left"></td>
+  <td class="left">Intended status: Standards Track</td>
   <td class="right">January 24, 2017</td>
 </tr>
 <tr>
@@ -479,12 +459,16 @@
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
-<p>This Unofficial Draft will expire on July 28, 2017.</p>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on July 28, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
-<p>Copyright (c) 2017 Facebook, Inc. and the persons identified as the document authors and
-published under the Creative Commons Attribution 4.0 International license.</p>
+<p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
   
   <hr class="noprint" />
   <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
@@ -498,7 +482,9 @@ published under the Creative Commons Attribution 4.0 International license.</p>
 <li>1.2.2.   <a href="#rfc.section.1.2.2">Password Hints</a></li>
 <li>1.2.3.   <a href="#rfc.section.1.2.3">Email Recovery</a></li>
 <li>1.2.4.   <a href="#rfc.section.1.2.4">Federated Authentication</a></li>
-<li>1.2.5.   <a href="#rfc.section.1.2.5">Alternate Methods</a></li>
+<li>1.2.5.   <a href="#rfc.section.1.2.5">Federated Account Recovery using a Common Identifier</a></li>
+<li>1.2.6.   <a href="#rfc.section.1.2.6">Federated Account Recovery</a></li>
+<li>1.2.7.   <a href="#rfc.section.1.2.7">Alternate Methods</a></li>
 <li>1.3.   <a href="#rfc.section.1.3">Relationship to Other Protocols</a></li>
 <li>1.4.   <a href="#rfc.section.1.4">Goals</a></li>
 <li>1.5.   <a href="#rfc.section.1.5">Roles</a></li>
@@ -594,17 +580,58 @@ published under the Creative Commons Attribution 4.0 International license.</p>
   <li>Email recovery flows cannot be used to recover capabilities, such as cryptographic keys, that may be necessary to use an account (e.g. a network-based file store that offers encrypted files) but which the user does not want the account provider to have access to at all times.</li>
 </ul>
 <h1 id="rfc.section.1.2.4"><a href="#rfc.section.1.2.4">1.2.4.</a> Federated Authentication</h1>
-<p id="rfc.section.1.2.4.p.1">Federated systems for authentication take many forms and solve the problem of account recovery (or at least delegate it implicitly to the Identity Provider). However, after fifteen years of widespread deployment of such systems, we see few mainstream services that are willing to rely exclusively on federated logins for a variety of reasons.  </p>
+<p id="rfc.section.1.2.4.p.1">Federated systems for authentication take many forms and delegate authentication to the Identity Provider. This moves the problem of users forgetting their password at the IdP.  After fifteen years of widespread deployment of such systems, we see few mainstream services that are willing to rely exclusively on federated logins for a variety of reasons.  </p>
 
 <ul>
   <li>A user may be unwilling to disclose their identity, other information, or grant permissions to a new service they have just begun to use and about which they have not yet formed an opinion of its value or trustworthiness.</li>
   <li>A service may be unwilling to depend on a third-party for access to its customer base. They may view "owning" their relationship with the customer as having business value, may have a regulatory mandate to do so, or may not want to be beholden to the availability of a third party for their most important customer interactions.</li>
   <li>A service may view providers of federated login services as competitors or potential competitors, and not wish to disclose information about how often users are logging on, who their most active users are or not desire to show a competitor's logo as part of their login process.</li>
 </ul>
-<h1 id="rfc.section.1.2.5"><a href="#rfc.section.1.2.5">1.2.5.</a> Alternate Methods</h1>
-<p id="rfc.section.1.2.5.p.1">Methods do exist to strongly re-authenticate an account holder in the absence of a password or other primary credential.  Device-based or multi-factor authentication, multi-device authentication, or trusted connections in a social network are possibilities.  Unfortunately, of the potentially hundreds of services a user interacts with in a year, only a few are likely able to leverage such factors. The rest will lack the information, resources, and user consent needed. Furthermore, the characteristics that make good recovery systems strong also may make them unique to a particular service, preventing broad adoption as a best practice by other providers.</p>
+<p id="rfc.section.1.2.4.p.2">As upto this writing (2017) federated systems are not used for account recovery between identity providers.</p>
+<p id="rfc.section.1.2.4.p.3">Also Service Providers allowing onboarding to the service using Identity Providers and then creating their own local account rarely allow users to recover their account by IdP login.</p>
+<h1 id="rfc.section.1.2.5"><a href="#rfc.section.1.2.5">1.2.5.</a> Federated Account Recovery using a Common Identifier</h1>
+<p id="rfc.section.1.2.5.p.1">Service Providers are well advised to separate authentication and authorization from the API their service provides.  This allows them to concentrate on their API and their service while implementing authentication and authorization using available OpenID Connect libraries.</p>
+<p id="rfc.section.1.2.5.p.2">In this scenario an IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</p>
+<p id="rfc.section.1.2.5.p.3">The user's identifier e.g. their email address or telefon number is used at both the Service Provider and the Recovery Provider.</p>
+<p id="rfc.section.1.2.5.p.4">To implement Account Recovery the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</p>
+<p id="rfc.section.1.2.5.p.5">OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</p>
+<p id="rfc.section.1.2.5.p.6">Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</p>
+<h1 id="rfc.section.1.2.5.1"><a href="#rfc.section.1.2.5.1">1.2.5.1.</a> Example User Flow</h1>
+<p/>
+
+<ul>
+  <li>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</li>
+  <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</li>
+  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</li>
+  <li>Successful validation allows the user now to register new credentials with the Services Provider.</li>
+</ul>
+<h1 id="rfc.section.1.2.6"><a href="#rfc.section.1.2.6">1.2.6.</a> Federated Account Recovery</h1>
+<p id="rfc.section.1.2.6.p.1">As in the previous scenario the Service Provider's (own) IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</p>
+<p id="rfc.section.1.2.6.p.2">And again the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</p>
+<p id="rfc.section.1.2.6.p.3">The difference to the previous scenario is that the Service Provider establishes a user specific relationship with the Recovery Provider.</p>
+<h1 id="rfc.section.1.2.6.1"><a href="#rfc.section.1.2.6.1">1.2.6.1.</a> Example User Flow of the Recovery Setup</h1>
+<p/>
+
+<ul>
+  <li>The Service Provider adds a "Add Password Recovery with 'Recovery Provider' to your Account" to their Registration Page.</li>
+  <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</li>
+  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</li>
+  <li>Successful validation allows the user now to register new credentials with the Services Provider. The major difference to the previous scenario is that the Service Provider now uses OP provided SP specific user identitier as in its own user database.</li>
+  <li>A variant of this scenario of this flow asks the user to provide their user id before the data flows to the Recovery Provider.  The service provider looks up this user identifier in its database and sends it and the Recovery Provider provided SP specific subject identifier to the Recovery provider. This makes guessing of subject identifiers and profiling of the Recovery Provider harder. The Recovery Provider MUST reject all requests where user identifier and subject identifier don't match.</li>
+</ul>
+<h1 id="rfc.section.1.2.6.2"><a href="#rfc.section.1.2.6.2">1.2.6.2.</a> Example User Flow of the Recovery</h1>
+<p/>
+
+<ul>
+  <li>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</li>
+  <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.  The subject (sub) of the openid request object is now the Recovery Provider provided SP specific user identitfier.</li>
+  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</li>
+  <li>Successful validation allows the user now to register new credentials with the Services Provider. The user is in this scenario free to choose any user id that is available at the service provider.</li>
+</ul>
+<h1 id="rfc.section.1.2.7"><a href="#rfc.section.1.2.7">1.2.7.</a> Alternate Methods</h1>
+<p id="rfc.section.1.2.7.p.1">Methods do exist to strongly re-authenticate an account holder in the absence of a password or other primary credential.  Device-based or multi-factor authentication, multi-device authentication, or trusted connections in a social network are possibilities.  Unfortunately, of the potentially hundreds of services a user interacts with in a year, only a few are likely able to leverage such factors. The rest will lack the information, resources, and user consent needed. Furthermore, the characteristics that make good recovery systems strong also may make them unique to a particular service, preventing broad adoption as a best practice by other providers.</p>
 <h1 id="rfc.section.1.3"><a href="#rfc.section.1.3">1.3.</a> Relationship to Other Protocols</h1>
-<p id="rfc.section.1.3.p.1">Delegated Recovery is similar in some respects to OAuth <a href="#RFC5849">[RFC5849]</a>and related protocols.</p>
+<p id="rfc.section.1.3.p.1">Delegated Recovery is similar in some respects to OAuth <a href="#RFC5849">[RFC5849]</a> and related protocols like <a href="#OpenID.Core">OpenID Connect Core</a> <cite title="NONE">[OpenID.Core]</cite>.</p>
 <p id="rfc.section.1.3.p.2">It is not constructed simply as a profile of one these protocols as it relies on different trust semantics. Because tokens granting an account recovery capability are expected to have an indefinite lifetime and should be able to remain valid even following the compromise and/or rotation of the keys they were originally issued under, tokens in this protocol derive their authority at a point in time from being signed with currently published public keys, discoverable over HTTPS.</p>
 <p id="rfc.section.1.3.p.3">As this trust model is different than other protocols in the broad OAuth family, profiling an existing protocol to fit these needs would likely be considerably more complex than implementing a new, minimalist protocol from scratch. As such, the latter approach has been taken here.</p>
 <h1 id="rfc.section.1.4"><a href="#rfc.section.1.4">1.4.</a> Goals</h1>
@@ -1269,49 +1296,49 @@ countersigned_token_internals = struct {
       <td class="reference">
         <b id="RFC2119">[RFC2119]</b>
       </td>
-      <td class="top"><a href="mailto:sob@harvard.edu" title="Harvard University">Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, March 1997.</td>
+      <td class="top"><a>Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="RFC3339">[RFC3339]</b>
       </td>
-      <td class="top"><a href="mailto:GK@ACM.ORG" title="Clearswift Corporation">Klyne, G.</a> and <a href="mailto:chris.newman@sun.com" title="Sun Microsystems">C. Newman</a>, "<a href="http://tools.ietf.org/html/rfc3339">Date and Time on the Internet: Timestamps</a>", RFC 3339, July 2002.</td>
+      <td class="top"><a>Klyne, G.</a> and <a>C. Newman</a>, "<a href="http://tools.ietf.org/html/rfc3339">Date and Time on the Internet: Timestamps</a>", RFC 3339, DOI 10.17487/RFC3339, July 2002.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="RFC3629">[RFC3629]</b>
       </td>
-      <td class="top"><a>Yergeau, F.</a>, "<a href="http://tools.ietf.org/html/rfc3629">UTF-8, a transformation format of ISO 10646</a>", STD 63, RFC 3629, November 2003.</td>
+      <td class="top"><a>Yergeau, F.</a>, "<a href="http://tools.ietf.org/html/rfc3629">UTF-8, a transformation format of ISO 10646</a>", STD 63, RFC 3629, DOI 10.17487/RFC3629, November 2003.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="RFC3986">[RFC3986]</b>
       </td>
-      <td class="top"><a href="mailto:timbl@w3.org" title="World Wide Web Consortium">Berners-Lee, T.</a>, <a href="mailto:fielding@gbiv.com" title="Day Software">Fielding, R.</a> and <a href="mailto:LMM@acm.org" title="Adobe Systems Incorporated">L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>", STD 66, RFC 3986, January 2005.</td>
+      <td class="top"><a>Berners-Lee, T.</a>, <a>Fielding, R.</a> and <a>L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>", STD 66, RFC 3986, DOI 10.17487/RFC3986, January 2005.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="RFC5246">[RFC5246]</b>
       </td>
-      <td class="top"><a>Dierks, T.</a> and <a>E. Rescorla</a>, "<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>", RFC 5246, August 2008.</td>
+      <td class="top"><a>Dierks, T.</a> and <a>E. Rescorla</a>, "<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>", RFC 5246, DOI 10.17487/RFC5246, August 2008.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="RFC5480">[RFC5480]</b>
       </td>
-      <td class="top"><a>Turner, S.</a>, <a>Brown, D.</a>, <a>Yiu, K.</a>, <a>Housley, R.</a> and <a>T. Polk</a>, "<a href="http://tools.ietf.org/html/rfc5480">Elliptic Curve Cryptography Subject Public Key Information</a>", RFC 5480, March 2009.</td>
+      <td class="top"><a>Turner, S.</a>, <a>Brown, D.</a>, <a>Yiu, K.</a>, <a>Housley, R.</a> and <a>T. Polk</a>, "<a href="http://tools.ietf.org/html/rfc5480">Elliptic Curve Cryptography Subject Public Key Information</a>", RFC 5480, DOI 10.17487/RFC5480, March 2009.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="RFC5849">[RFC5849]</b>
       </td>
-      <td class="top"><a>Hammer-Lahav, E.</a>, "<a href="http://tools.ietf.org/html/rfc5849">The OAuth 1.0 Protocol</a>", RFC 5849, April 2010.</td>
+      <td class="top"><a>Hammer-Lahav, E.</a>, "<a href="http://tools.ietf.org/html/rfc5849">The OAuth 1.0 Protocol</a>", RFC 5849, DOI 10.17487/RFC5849, April 2010.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="RFC6454">[RFC6454]</b>
       </td>
-      <td class="top"><a>Barth, A.</a>, "<a href="http://tools.ietf.org/html/rfc6454">The Web Origin Concept</a>", RFC 6454, December 2011.</td>
+      <td class="top"><a>Barth, A.</a>, "<a href="http://tools.ietf.org/html/rfc6454">The Web Origin Concept</a>", RFC 6454, DOI 10.17487/RFC6454, December 2011.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1342,6 +1369,12 @@ countersigned_token_internals = struct {
         <b id="ISO.8601.1988">[ISO.8601.1988]</b>
       </td>
       <td class="top"><a>International Organization for Standardization</a>, "<a>Data elements and interchange formats - Information interchange - Representation of dates and times</a>", ISO Standard 8601, June 1988.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="OpenID.Core">[OpenID.Core]</b>
+      </td>
+      <td class="top"><a href="mailto:n-sakimura@nri.co.jp" title="Nomura Research Institute, Ltd.">Sakimura, N.</a>, <a href="mailto:ve7jtb@ve7jtb.com" title="Ping Identity">Bradley, J.</a>, <a href="mailto:mbj@microsoft.com" title="Microsoft">Jones, M.</a>, <a href="mailto:breno@google.com" title="Google">de Medeiros, B.</a> and <a href="mailto:cmortimore@salesforce.com" title="Salesforce">C. Mortimore</a>, "<a href="http://openid.net/specs/openid-connect-core-1_0.html">OpenID Connect Core 1.0</a>", August 2015.</td>
     </tr>
     <tr>
       <td class="reference">

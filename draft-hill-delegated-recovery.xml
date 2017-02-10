@@ -221,7 +221,45 @@
           This allows them to concentrate on their API and their service while implementing authentication and authorization using available OpenID Connect libraries.</t>
           <t>In this scenario an IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</t>
           <t>The user's identifier e.g. their email address or telefon number is used at both the Service Provider and the Recovery Provider.</t>
-          <t>For Account Recovery they now create a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
+          <t>To implement Account Recovery the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
+          <t>OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</t>
+          <t>Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</t>
+          <section title="Example User Flow"><t>
+            <list style="symbols">
+            <t>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</t>
+            <t>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</t>
+            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</t>
+            <t>Successful validation allows the user now to register new credentials with the Services Provider.</t>
+            </list></t>
+          </section>
+        </section>
+        <section title="Federated Account Recovery">
+          <t>As in the previous scenario the Service Provider's (own) IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</t>
+          <t>And again the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
+          <t>The difference to the previous scenario is that the Service Provider establishes a user specific relationship with the Recovery Provider.</t>
+          <section title="Example User Flow of the Recovery Setup"><t>
+            <list style="symbols">
+            <t>The Service Provider adds a "Add Password Recovery with 'Recovery Provider' to your Account" to their Registration Page.</t>
+            <t>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</t>
+            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</t>
+            <t>Successful validation allows the user now to register new credentials with the Services Provider. The major difference to the previous
+               scenario is that the Service Provider now uses OP provided SP specific user identitier as in its own user database.</t>
+            <t>A variant of this scenario of this flow asks the user to provide their user id before the data flows to the Recovery Provider.
+               The service provider looks up this user identifier in its database and sends it and the Recovery Provider provided SP specific subject identifier
+               to the Recovery provider. This makes guessing of subject identifiers and profiling of the Recovery Provider harder. The Recovery Provider 
+               MUST reject all requests where user identifier and subject identifier don't match.</t>
+            </list></t>
+          </section>
+          <section title="Example User Flow of the Recovery"><t>
+            <list style="symbols">
+            <t>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</t>
+            <t>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.
+               The subject (sub) of the openid request object is now the Recovery Provider provided SP specific user identitfier.</t>
+            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</t>
+            <t>Successful validation allows the user now to register new credentials with the Services Provider. The user is in this scenario free
+               to choose any user id that is available at the service provider.</t>
+            </list></t>
+          </section>
         </section>
         <!-- Federated Authentication -->
         <section title="Alternate Methods">
