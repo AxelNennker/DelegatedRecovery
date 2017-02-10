@@ -14,6 +14,7 @@
 <!ENTITY rfc7034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7034.xml">
 <!ENTITY rfc7469 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7469.xml">
 <!ENTITY iso.8601.1988 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml2/reference.ISO.8601.1988.xml">
+<!ENTITY OpenID.Core "https://openid.net/bibxml/reference.OpenID.Core.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc symrefs="yes"?>
@@ -246,7 +247,8 @@
       <!-- Challenges with Existing Account Recovery Solutions -->
       <section title="Relationship to Other Protocols">
         <t>Delegated Recovery is similar in some respects to OAuth
-        <xref target="RFC5849"></xref>and related protocols.</t>
+        <xref target="RFC5849"></xref> and related protocols like 
+        <xref target="OpenID.Core">OpenID Connect Core</xref>.</t>
         <t>It is not constructed simply as a profile of one these protocols
         as it relies on different trust semantics. Because tokens granting an
         account recovery capability are expected to have an indefinite
@@ -1720,7 +1722,7 @@ countersigned_token_internals = struct {
   <back>
     <references title="Normative References">&rfc2119;
     &rfc3339; &rfc3629; &rfc3986; &rfc5246; &rfc5480;
-    &rfc5849; &rfc6454; &rfc6962; &rfc6979; &rfc7034; &rfc7469; &iso.8601.1988;
+    &rfc5849; &rfc6454; &rfc6962; &rfc6979; &rfc7034; &rfc7469; &iso.8601.1988; &OpenID.Core;
     <reference anchor="SEC1"
                target="http://www.secg.org/collateral/sec1_final.pdf">
       <front>
