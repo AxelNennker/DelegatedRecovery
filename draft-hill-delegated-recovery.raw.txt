@@ -76,25 +76,25 @@ Table of Contents
      1.5.  Roles . . . . . . . . . . . . . . . . . . . . . . . . . .  10
      1.6.  Protocol Flow . . . . . . . . . . . . . . . . . . . . . .  11
        1.6.1.  Establishing a Delegated Recovery Capability  . . . .  11
-       1.6.2.  Exercising a Delegated Recovery Capability  . . . . .  12
+       1.6.2.  Exercising a Delegated Recovery Capability  . . . . .  13
      1.7.  TLS Version . . . . . . . . . . . . . . . . . . . . . . .  15
      1.8.  HTTP Redirections . . . . . . . . . . . . . . . . . . . .  15
      1.9.  Application User Agents . . . . . . . . . . . . . . . . .  15
-   2.  Fetching Configuration  . . . . . . . . . . . . . . . . . . .  15
+   2.  Fetching Configuration  . . . . . . . . . . . . . . . . . . .  16
    3.  Protocol Endpoints  . . . . . . . . . . . . . . . . . . . . .  18
      3.1.  Save Token Endpoint . . . . . . . . . . . . . . . . . . .  19
-       3.1.1.  Processing Instructions . . . . . . . . . . . . . . .  20
+       3.1.1.  Processing Instructions . . . . . . . . . . . . . . .  21
      3.2.  Save Token Return Endpoint  . . . . . . . . . . . . . . .  23
      3.3.  Save Token Async API Endpoint . . . . . . . . . . . . . .  23
        3.3.1.  Asynchronous Message Contract . . . . . . . . . . . .  23
      3.4.  Recover Account Endpoint  . . . . . . . . . . . . . . . .  28
      3.5.  Recover Account Return Endpoint . . . . . . . . . . . . .  29
-     3.6.  Token Status Endpoint . . . . . . . . . . . . . . . . . .  30
+     3.6.  Token Status Endpoint . . . . . . . . . . . . . . . . . .  31
        3.6.1.  Processing Instructions . . . . . . . . . . . . . . .  31
        3.6.2.  Security Considerations . . . . . . . . . . . . . . .  32
    4.  Token Generation  . . . . . . . . . . . . . . . . . . . . . .  32
      4.1.  Recovery Token  . . . . . . . . . . . . . . . . . . . . .  32
-       4.1.1.  Internal Structure  . . . . . . . . . . . . . . . . .  32
+       4.1.1.  Internal Structure  . . . . . . . . . . . . . . . . .  33
        4.1.2.  Opaque Data . . . . . . . . . . . . . . . . . . . . .  34
        4.1.3.  Signature . . . . . . . . . . . . . . . . . . . . . .  35
      4.2.  Counter-Signed Recovery Token . . . . . . . . . . . . . .  35
@@ -102,8 +102,8 @@ Table of Contents
        4.2.2.  Counter-Signed Recovery Token Signature . . . . . . .  37
    5.  Use in Key Recovery . . . . . . . . . . . . . . . . . . . . .  37
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .  37
-     6.1.  Deterministic Use of ECDSA  . . . . . . . . . . . . . . .  37
-     6.2.  User Notification . . . . . . . . . . . . . . . . . . . .  37
+     6.1.  Deterministic Use of ECDSA  . . . . . . . . . . . . . . .  38
+     6.2.  User Notification . . . . . . . . . . . . . . . . . . . .  38
      6.3.  Additional Verification . . . . . . . . . . . . . . . . .  38
        6.3.1.  At the Recovery Provider  . . . . . . . . . . . . . .  38
 
@@ -114,17 +114,17 @@ Hill                     Expires August 14, 2017                [Page 2]
 Internet-Draft         Delegated Account Recovery          February 2017
 
 
-       6.3.2.  At the Account Provider . . . . . . . . . . . . . . .  38
+       6.3.2.  At the Account Provider . . . . . . . . . . . . . . .  39
      6.4.  Cross-Site Request Forgery  . . . . . . . . . . . . . . .  39
-     6.5.  Breach Detection  . . . . . . . . . . . . . . . . . . . .  39
+     6.5.  Breach Detection  . . . . . . . . . . . . . . . . . . . .  40
      6.6.  Clock Skew  . . . . . . . . . . . . . . . . . . . . . . .  40
      6.7.  Key Loss and Compromise . . . . . . . . . . . . . . . . .  40
      6.8.  TLS or HTTPS Certificate Compromise . . . . . . . . . . .  41
-     6.9.  Token Leakage . . . . . . . . . . . . . . . . . . . . . .  41
+     6.9.  Token Leakage . . . . . . . . . . . . . . . . . . . . . .  42
    7.  Implementation Notes  . . . . . . . . . . . . . . . . . . . .  42
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  42
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  42
-   10. Normative References  . . . . . . . . . . . . . . . . . . . .  42
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  43
+   10. Normative References  . . . . . . . . . . . . . . . . . . . .  43
    Appendix A.  Initial Algorithm Registry Contents  . . . . . . . .  44
 
 1.  Introduction
@@ -367,6 +367,9 @@ Internet-Draft         Delegated Account Recovery          February 2017
    endpoint (URL) that accepts access tokens and id_tokens issued by the
    Recovery Provider.
 
+   The OpenID Connect Code Flow as detailed in OpenID Connect Core
+   Section 3.1 [OpenID.Core] should be used.
+
    OpenID Connect request objects flowing from SP to Recovery Provider
    are signed and may be encrypted.
 
@@ -384,15 +387,18 @@ Internet-Draft         Delegated Account Recovery          February 2017
    o  Clicking that redirects the user's user agent to the Recovery
       Provider where they successfully authenticate.
 
-   o  The user agent is redirected to the Service Provider's new Account
-      Recovery endpoint where access token and id_token are validated.
-
 
 
 Hill                     Expires August 14, 2017                [Page 7]
 
 Internet-Draft         Delegated Account Recovery          February 2017
 
+
+   o  The user agent is redirected to the Service Provider's new Account
+      Recovery endpoint and the Code returned.
+
+   o  The Service Provider retrieves access token and id_token from the
+      OP and validates them.
 
    o  Successful validation allows the user now to register new
       credentials with the Services Provider.
@@ -436,12 +442,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
       sends it and the Recovery Provider provided SP specific subject
       identifier to the Recovery provider.  This makes guessing of
       subject identifiers and profiling of the Recovery Provider harder.
-      The Recovery Provider MUST reject all requests where user
-      identifier and subject identifier don't match.
-
-1.2.6.2.  Example User Flow of the Recovery
-
-
 
 
 
@@ -449,6 +449,11 @@ Hill                     Expires August 14, 2017                [Page 8]
 
 Internet-Draft         Delegated Account Recovery          February 2017
 
+
+      The Recovery Provider MUST reject all requests where user
+      identifier and subject identifier don't match.
+
+1.2.6.2.  Example User Flow of the Recovery
 
    o  The Service Provider adds a "Password Recovery with 'Recovery
       Provider'" to their Login Page.
@@ -459,7 +464,10 @@ Internet-Draft         Delegated Account Recovery          February 2017
       SP specific user identitfier.
 
    o  The user agent is redirected to the Service Provider's new Account
-      Recovery endpoint where access token and id_token are validated.
+      Recovery endpoint and the Code returned.
+
+   o  The Service Provider retrieves access token and id_token from the
+      OP and validates them.
 
    o  Successful validation allows the user now to register new
       credentials with the Services Provider.  The user is in this
@@ -490,6 +498,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
    lifetime and should be able to remain valid even following the
    compromise and/or rotation of the keys they were originally issued
    under, tokens in this protocol derive their authority at a point in
+
+
+
+Hill                     Expires August 14, 2017                [Page 9]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    time from being signed with currently published public keys,
    discoverable over HTTPS.
 
@@ -498,13 +514,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    likely be considerably more complex than implementing a new,
    minimalist protocol from scratch.  As such, the latter approach has
    been taken here.
-
-
-
-Hill                     Expires August 14, 2017                [Page 9]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
 1.4.  Goals
 
@@ -545,6 +554,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
    User
       The entity in control of the accounts.
 
+
+
+
+Hill                     Expires August 14, 2017               [Page 10]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    Account Provider
       The network service at which a user has an account they need to
       establish a recovery capability for.
@@ -553,14 +570,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
       The network service which offers the delegated account recovery
       service, and at which a user has an account and wishes to use to
       recover control of other accounts.
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 10]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
 1.6.  Protocol Flow
 
@@ -601,6 +610,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
         +---------------------------------------->|
         |                     |                   |
         | (optional)          | 7. Verify and     +---+
+
+
+
+Hill                     Expires August 14, 2017               [Page 11]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
         | 8. Notify Account   | Save Recovery     |   |
         | Provider with       | Token             |<--+
         | Result Code for     |                   |
@@ -610,14 +627,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
         | 9. Redirect User    |                   |
         | Agent back to       |                   |
         | Account Provider    |                   |
-
-
-
-Hill                     Expires August 14, 2017               [Page 11]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
         |                     |                   |
         |<--------------------+<------------------+
         |                     |                   |
@@ -658,6 +667,13 @@ Internet-Draft         Delegated Account Recovery          February 2017
    7.  The Recovery Provider validates the signature on the token and
        saves it.
 
+
+
+Hill                     Expires August 14, 2017               [Page 12]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    8.  The Recovery Provider optionally notifies the Account Provider of
        the status of the operation.
 
@@ -665,13 +681,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
        callback URL indicated by the configuration with a status code.
 
 1.6.2.  Exercising a Delegated Recovery Capability
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 12]
-
-Internet-Draft         Delegated Account Recovery          February 2017
 
 
       +--------+           +------+          +----+---+
@@ -713,6 +722,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
         | Counter-Signed      |                   |
         | Recovery Token      |                   |
         |<--------------------+<------------------+
+
+
+
+Hill                     Expires August 14, 2017               [Page 13]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
         |                     |                   |
         |                     | 8. Retrieve       |
         |                     | Configuration     |
@@ -722,14 +739,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    +----+ 9. Validate         |                   |
    |    | Recovery Token      |                   |
    +--->|                     |                   |
-
-
-
-Hill                     Expires August 14, 2017               [Page 13]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
         |                     |                   |
         |                     |                   |
         | 10. Restore Control |                   |
@@ -768,15 +777,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    7.   The Recovery Provider sends the user agent to the Account
         Provider's recovery URL with the counter-signed token.
 
-   8.   The Account Provider receives a token, and retrieves the
-        Recovery Provider's current configuration to discover its keys.
-
-   9.   The Account Provider validates the counter-signature, additional
-        fields, its originally issued token, and takes any other
-        necessary steps to complete risk-appropriate re-authentication
-        of the user.
-
-
 
 
 
@@ -785,6 +785,14 @@ Hill                     Expires August 14, 2017               [Page 14]
 
 Internet-Draft         Delegated Account Recovery          February 2017
 
+
+   8.   The Account Provider receives a token, and retrieves the
+        Recovery Provider's current configuration to discover its keys.
+
+   9.   The Account Provider validates the counter-signature, additional
+        fields, its originally issued token, and takes any other
+        necessary steps to complete risk-appropriate re-authentication
+        of the user.
 
    10.  The Account Provider restores control of the account to the user
         and allows a new primary authentication method or credential to
@@ -825,14 +833,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    standard web browser is the most standardized and convenient
    mechanism available and should be preferred.
 
-2.  Fetching Configuration
-
-   Fetching Configuration is the process of determining the protocol
-   endpoints and public keys used by Account Providers and Recovery
-   Providers.
-
-
-
 
 
 
@@ -841,6 +841,12 @@ Hill                     Expires August 14, 2017               [Page 15]
 
 Internet-Draft         Delegated Account Recovery          February 2017
 
+
+2.  Fetching Configuration
+
+   Fetching Configuration is the process of determining the protocol
+   endpoints and public keys used by Account Providers and Recovery
+   Providers.
 
    Service providers may indicate that configuration responses are
    cacheable and may cache responses but cache lifetimes should be kept
@@ -884,12 +890,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    |                                 | scheme component.               |
    +---------------------------------+---------------------------------+
    | countersign-pubkeys-secp256r1   | An array of ECDSA public keys   |
-   |                                 | on the secp256r1 curve, encoded |
-   |                                 | uncompressed with the named     |
-   |                                 | curve OID as per X9.62. The     |
-   |                                 | Recovery Provider should not    |
-   |                                 | publish more than two keys;     |
-   |                                 | enabling key rotation with a    |
 
 
 
@@ -898,6 +898,12 @@ Hill                     Expires August 14, 2017               [Page 16]
 Internet-Draft         Delegated Account Recovery          February 2017
 
 
+   |                                 | on the secp256r1 curve, encoded |
+   |                                 | uncompressed with the named     |
+   |                                 | curve OID as per X9.62. The     |
+   |                                 | Recovery Provider should not    |
+   |                                 | publish more than two keys;     |
+   |                                 | enabling key rotation with a    |
    |                                 | small overlap period is the     |
    |                                 | primary purpose of allowing     |
    |                                 | more than one key to be         |
@@ -940,12 +946,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    | issuer                        | The RFC6454 ASCII Serialization   |
    |                               | of the Origin to which this       |
    |                               | configuration statement applies.  |
-   |                               | MUST have an https: scheme        |
-   |                               | component.                        |
-   +-------------------------------+-----------------------------------+
-   | tokensign-pubkeys-secp256r1   | An array of ECDSA public keys on  |
-   |                               | the secp256r1 curve, encoded      |
-   |                               | uncompressed with the named curve |
 
 
 
@@ -954,6 +954,12 @@ Hill                     Expires August 14, 2017               [Page 17]
 Internet-Draft         Delegated Account Recovery          February 2017
 
 
+   |                               | MUST have an https: scheme        |
+   |                               | component.                        |
+   +-------------------------------+-----------------------------------+
+   | tokensign-pubkeys-secp256r1   | An array of ECDSA public keys on  |
+   |                               | the secp256r1 curve, encoded      |
+   |                               | uncompressed with the named curve |
    |                               | OID as per X9.62. An Account      |
    |                               | Provider should not publish more  |
    |                               | than two keys; enabling key       |
@@ -996,12 +1002,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    All protocol endpoints MUST use the https:// scheme, and the protocol
    endpoint paths at the http:// scheme MUST NOT redirect to the https:/
-   / protocol, as this may mask configuration mistakes by clients.  A
-   GET or POST to protocol endpoint paths using the http:// scheme MUST
-   yield an empty response body and an HTTP status code 401.
-
-   When establishing a recovery capability, the following endpoints are
-   used:
 
 
 
@@ -1009,6 +1009,13 @@ Hill                     Expires August 14, 2017               [Page 18]
 
 Internet-Draft         Delegated Account Recovery          February 2017
 
+
+   / protocol, as this may mask configuration mistakes by clients.  A
+   GET or POST to protocol endpoint paths using the http:// scheme MUST
+   yield an empty response body and an HTTP status code 401.
+
+   When establishing a recovery capability, the following endpoints are
+   used:
 
    o  "Save Token" at the Recovery Provider is the endpoint to which the
       Account Provider will instruct the user agent to deliver the
@@ -1049,14 +1056,7 @@ Internet-Draft         Delegated Account Recovery          February 2017
    authenticate the User.  The way in which the Recovery Provider
    authenticates the User is beyond the scope of this specification.
 
-   Save Token endpoints which expect to receive invocations by web user
-   agents MUST support the HTTP "POST" method and SHOULD reject the HTTP
-   "GET" method.
 
-   If navigating from an Account Provider implemented as a native app to
-   a general purpose web browser and POST is not available, the Account
-   Provider SHOULD first navigate the user agent to a resource under its
-   control and use that resource to perform the POST.
 
 
 
@@ -1065,6 +1065,15 @@ Hill                     Expires August 14, 2017               [Page 19]
 
 Internet-Draft         Delegated Account Recovery          February 2017
 
+
+   Save Token endpoints which expect to receive invocations by web user
+   agents MUST support the HTTP "POST" method and SHOULD reject the HTTP
+   "GET" method.
+
+   If navigating from an Account Provider implemented as a native app to
+   a general purpose web browser and POST is not available, the Account
+   Provider SHOULD first navigate the user agent to a resource under its
+   control and use that resource to perform the POST.
 
    The POST body MUST be "application/x-www-form-urlencoded" formatted.
    It MUST contain a parameter "token" containing the recovery token.
@@ -1106,6 +1115,13 @@ Internet-Draft         Delegated Account Recovery          February 2017
    be deleted or marked as invalid if the new token is successfully
    saved.
 
+
+
+Hill                     Expires August 14, 2017               [Page 20]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    The POST body MAY contain an additional parameter 'state', the value
    of which will be passed to the 'save-token-return' endpoint,
    unmodified.
@@ -1114,13 +1130,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    When a user wishes to save a recovery token, the Account Provider
    takes the following processing steps:
-
-
-
-Hill                     Expires August 14, 2017               [Page 20]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    1.  Authenticate the User.  The exact nature of how the Account
        Provider authenticates the User is beyond the scope of this
@@ -1159,15 +1168,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    Upon receiving an invocation of the Save Token endpoint the Recovery
    Provider takes the following processing steps:
 
-   1.   Authenticate the User.  The exact nature of how the Recovery
-        Provider authenticates the User is beyond the scope of this
-        specification.
-
-   2.   Parse the token.
-
-   3.   Validate that the version value is 0.
-
-   4.   Validate that the type value is 0.
 
 
 
@@ -1177,6 +1177,16 @@ Hill                     Expires August 14, 2017               [Page 21]
 
 Internet-Draft         Delegated Account Recovery          February 2017
 
+
+   1.   Authenticate the User.  The exact nature of how the Recovery
+        Provider authenticates the User is beyond the scope of this
+        specification.
+
+   2.   Parse the token.
+
+   3.   Validate that the version value is 0.
+
+   4.   Validate that the type value is 0.
 
    5.   Retrieve the Account Provider configuration as described in
         Section 2 using the issuer field of the token as the subject.
@@ -1216,6 +1226,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
         cannot be completed due to an unrecoverable error, if the
         token's "status_requested" field is 1, the Recovery Provider MAY
         invoke the Token Status endpoint "token-status" for the "save-
+
+
+
+Hill                     Expires August 14, 2017               [Page 22]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
         success" or "save-failure" status, as appropriate, following the
         processing instructions for that operation described below.
 
@@ -1225,14 +1243,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
         success" or "save-failure" to report whether a token was
         successfully saved, regardless of whether asynchronous status
         updates for the token were requested.
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 22]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    15.  If a 'state' parameter was included with the original request,
         send its value, unmodified, as an additional parameter in the
@@ -1273,6 +1283,13 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    The "message" argument to "postMessage()" MUST be a JSON object.
 
+
+
+Hill                     Expires August 14, 2017               [Page 23]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    Messages related to this API MUST always contain the property
    'delegated-account-recovery-api-message' with a value indicating the
    type of the protocol message.
@@ -1281,15 +1298,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    values:
 
    ready
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 23]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
        Sent by API to parent to indicate it is ready to receive
        messages.
 
@@ -1331,14 +1339,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    On loading, the async API resource MUST post a message to its parent
    of type 'ready'.
 
-3.3.1.1.  save-token message
-
-   This message type MUST have an additional property, 'token', that
-   contains the base64 encoded recovery token to be saved.
-
-   This message type MAY contain the additional property 'login_hint'.
-   These values may be set to indicate the Account Provider's notion of
-
 
 
 Hill                     Expires August 14, 2017               [Page 24]
@@ -1346,6 +1346,13 @@ Hill                     Expires August 14, 2017               [Page 24]
 Internet-Draft         Delegated Account Recovery          February 2017
 
 
+3.3.1.1.  save-token message
+
+   This message type MUST have an additional property, 'token', that
+   contains the base64 encoded recovery token to be saved.
+
+   This message type MAY contain the additional property 'login_hint'.
+   These values may be set to indicate the Account Provider's notion of
    the primary contact points for the user.  A Recovery Provider might
    match these against the currently logged in user to determine what UI
    treatments, if any, to apply to confirm saving of the recovery token.
@@ -1382,6 +1389,19 @@ Internet-Draft         Delegated Account Recovery          February 2017
    Provider's save-token-return endpoint with the status parameter set
    to 'save-success' and any 'state' parameter set.
 
+
+
+
+
+
+
+
+
+Hill                     Expires August 14, 2017               [Page 25]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
 3.3.1.2.  save-token-no-navigation message
 
    This message has identical arguments to the 'save-token' message.
@@ -1394,14 +1414,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    This method may be preferred by a caller that wants to guarantee the
    user isn't navigated away from a critical experience they are
    interacting with, like an account creation funnel.  The account
-
-
-
-Hill                     Expires August 14, 2017               [Page 25]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
    provider might choose to, e.g. open a popup with a POST directly to
    the 'save-token' endpoint to complete any interaction with the
    Recovery Provider if the value of 'result' is not 'save-success'.
@@ -1438,6 +1450,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    The value of the 'state' property on the message, if set, is ignored.
 
+
+
+
+Hill                     Expires August 14, 2017               [Page 26]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
 3.3.1.4.  save-token-result message
 
    This message is sent to the parent frame in response to a 'save-
@@ -1450,13 +1470,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    response to a 'save-token-async-only' message, the value is always
    'done', indicating when it is safe to navigate or otherwise destroy
    the iframe hosting the API.
-
-
-
-Hill                     Expires August 14, 2017               [Page 26]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
 3.3.1.5.  get-binding message
 
@@ -1493,6 +1506,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    Recovery Providers are not required to process all APIs uniformly.
    For example, a Recovery Provider might refuse to process 'save-token-
+
+
+
+Hill                     Expires August 14, 2017               [Page 27]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    async-only' messages from certain issuers, or only attempt to process
    them if the Account Provider is the canonical owner of the users's
    primary contact point at the Recovery Provider. (e.g. a Recovery
@@ -1506,14 +1527,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    leak information about a user.  It SHOULD NOT provide the same or a
    correlatable response across different instances of the iframe
    resource implementing the API, and SHOULD NOT provide bindings that
-
-
-
-Hill                     Expires August 14, 2017               [Page 27]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
    are distinguishable by callers based on user state or properties.
    (logged in, user identifier, user IP address, etc)
 
@@ -1549,6 +1562,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
    Upon receiving an invocation of the Recover Account endpoint the
    Recovery Provider takes the following processing steps:
 
+
+
+
+Hill                     Expires August 14, 2017               [Page 28]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    1.  Authenticate the user.  The exact nature of how the Recovery
        Provider authenticates the user is beyond the scope of this
        specification.
@@ -1561,14 +1582,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    4.  Create a counter-signed token as described in Section 4 and sign
        the token according to the algorithm's requirement.
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 28]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    5.  Redirect the user agent to the "recover-account-return" endpoint
        defined by the Account Provider configuration.  The "application/
@@ -1606,6 +1619,13 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    2.   Validate that the version field is 0.
 
+
+
+Hill                     Expires August 14, 2017               [Page 29]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    3.   Validate that the type field is 1.
 
    4.   De-serialize the original recovery token from the data field.
@@ -1617,14 +1637,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    7.   Validate that the timestamp is fresh within an acceptable closk
         skew.
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 29]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    8.   Validate the token binding for the countersigned token, if
         present. (the token binding for the inner token is not relevant)
@@ -1662,6 +1674,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
    16.  The Account Provider should make a permanent record of the
         recovery noting the Recovery Provider and time of recovery, to
         remediate fraudulent recoveries in the event that a compromise
+
+
+
+Hill                     Expires August 14, 2017               [Page 30]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
         is subsequently determined to have occurred at the Recovery
         Provider.
 
@@ -1673,14 +1693,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    The Token Status endpoint is used by the Recovery Provider to notify
    the Account Provider about the current status of a particular token
    in the following cases:
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 30]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    1.  When a new token is first saved, or fails to save, at the
        Recovery Provider.
@@ -1717,6 +1729,15 @@ Internet-Draft         Delegated Account Recovery          February 2017
    The following token lifecycle events can be reported to an Account
    Provider by a Recovery Provider:
 
+
+
+
+
+Hill                     Expires August 14, 2017               [Page 31]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    o  "save-success" reports that a token has been successfully saved
       with the Recovery Provider.
 
@@ -1727,16 +1748,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
       Recovery Provider.  The Account Provider may want to prompt the
       user to establish a new account recovery capability if the deleted
       token was the only one associated with the account.
-
-
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 31]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    o  "token-repudiated" reports that a user has informed the Recovery
       Provider that a token was associated with their account without
@@ -1775,6 +1786,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
 4.1.  Recovery Token
 
+
+
+
+Hill                     Expires August 14, 2017               [Page 32]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    A Recovery Token is a credential representing the ability to recover
    control of an account.  It is defined as:
 
@@ -1786,14 +1805,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
 
    token_internals = struct {
-
-
-
-Hill                     Expires August 14, 2017               [Page 32]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
            uint8    version
            uint8    type
            byte[16] token_id
@@ -1829,6 +1840,16 @@ Internet-Draft         Delegated Account Recovery          February 2017
        originally issued.
 
    options
+
+
+
+
+
+Hill                     Expires August 14, 2017               [Page 33]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
        MUST be 0 if the Account Provider does not want status callbacks
        or 1 to request the Recovery Provider to make status callbacks,
        if supported.
@@ -1842,13 +1863,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    audience_length
        Length of the audience field.
-
-
-
-Hill                     Expires August 14, 2017               [Page 33]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    audience
        The contents of the issuer field in the Recovery Provider's
@@ -1884,6 +1898,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    Because it is encrypted and opaque, it may contain whatever
    information in whatever format the Account Provider feels is
+
+
+
+Hill                     Expires August 14, 2017               [Page 34]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    necessary and appropriate, but any information beyond that specified
    for inclusion in the outer token MUST be placed in the encrypted
    portion and protected from disclosure to the Recovery Provider.
@@ -1898,13 +1920,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    compromised) but if the Account Provider loses this key (and the
    ability to decrypt the token data) the account recovery capability
    will be lost.
-
-
-
-Hill                     Expires August 14, 2017               [Page 34]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
 4.1.3.  Signature
 
@@ -1939,6 +1954,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
            uint8    version
            uint8    type
            byte[16] token_id
+
+
+
+Hill                     Expires August 14, 2017               [Page 35]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
            uint8    options
            uint16   issuer_length
            string   issuer[issuer_length]
@@ -1952,14 +1975,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
            opaque   binding[binding_length]
     }
 
-
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 35]
-
-Internet-Draft         Delegated Account Recovery          February 2017
 
 
    version
@@ -1995,6 +2010,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
        Length of the issued_time field.
 
    issued_time
+
+
+
+Hill                     Expires August 14, 2017               [Page 36]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
        The ASCII serialization of the time this token was issued,
        represented as an ISO 8601 [ISO.8601.1988]Internet Date/Time
        using the 'date-time' ABNF defined by RFC3339.  [RFC3339]
@@ -2009,14 +2032,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    binding_length
        Length of the token binding id.
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 36]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    binding
        Opaque token binding id obtained from the get-binding endpoint.
@@ -2051,6 +2066,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
 6.  Security Considerations
 
+
+
+
+Hill                     Expires August 14, 2017               [Page 37]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
 6.1.  Deterministic Use of ECDSA
 
    As even slight biases in the selection of the random value k used by
@@ -2066,13 +2089,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    Out-of-band means (email, instant message, SMS, etc.) should be
    preferred to reduce the opportunity for an attacker in control of a
    user's account to remove such signals.
-
-
-
-Hill                     Expires August 14, 2017               [Page 37]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
 6.3.  Additional Verification
 
@@ -2106,6 +2122,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
    accounts, and require additional confirmation that the user is aware
    of the current logged in user state before saving a recovery token.
 
+
+
+
+Hill                     Expires August 14, 2017               [Page 38]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
 6.3.2.  At the Account Provider
 
    This specification does not mandate that a counter-signed recovery
@@ -2121,14 +2145,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    is always at the discretion of the Account Provider.  Use of this
    protocol does not imply any contract or obligation to honor any
    previously saved recovery capability.
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 38]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    The opaque data field can be also be used to encapsulate additional
    information to use in strengthening the process.  For example, a
@@ -2162,6 +2178,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
    [RFC7034] or Content-Security-Policy "frame-ancestors" directive to
    prevent clickjacking attacks.
 
+
+
+
+Hill                     Expires August 14, 2017               [Page 39]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    Initiating sending a recovery token to a recovery provider should be
    protected against Cross-Site Request Forgery and clickjacking, to
    prevent users being tricked into sending tokens to fraudulent
@@ -2178,14 +2202,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    malicious provider.  Both Recovery and Account Providers should
    publish contact information for use in incident reporting and
    response.  Verification of token bindings and issued_time freshness
-
-
-
-Hill                     Expires August 14, 2017               [Page 39]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
    should also be performed to prevent disclosed tokens from being re-
    associated to new accounts at a Recovery Provider.
 
@@ -2218,6 +2234,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
    Providers with whom recovery capabilities were exercised during the
    window of compromise.  Mechanisms to communicate this are outside the
    scope of this protocol.  If notified by a Recovery Provider of a key
+
+
+
+Hill                     Expires August 14, 2017               [Page 40]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    compromise, Account Providers should identify recovery capabilities
    exercised from that provider during the window of compromise and
    perform additional diligence for the security of those accounts.
@@ -2234,14 +2258,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    not convey any capability without also being countersigned by the
    Recovery Provider's key, and they by themselves convey no personally
    identifying information about the account to which they apply.  So
-
-
-
-Hill                     Expires August 14, 2017               [Page 40]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
    long as the Recovery Provider's published key remains secure, leaked
    recovery tokens do not need to be distrusted or re-issued.
    Verification of token bindings and refusal of tokens with a stale
@@ -2274,6 +2290,14 @@ Internet-Draft         Delegated Account Recovery          February 2017
    of the root certification authorities they trust when performing
    configuration discovery operations over HTTPS, should use the latest
    practical TLS version and should terminate the protocol without user
+
+
+
+Hill                     Expires August 14, 2017               [Page 41]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    recourse if any errors are encountered.  Participants may want to
    employ additional means to reduce the risk of compromised HTTPS
    connections that are beyond the scope of this document, such as HTTP
@@ -2289,14 +2313,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    token leaks in their application-specific logic, such as avoiding
    moving tokens from POST to GET parameters in cleartext during a login
    flow prior to saving a token.
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 41]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    Use of a token binding can reduce these risks.
 
@@ -2325,6 +2341,19 @@ Internet-Draft         Delegated Account Recovery          February 2017
    Future revisions to this protocol may use a registry to map supported
    cryptographic algorithms to the token version indiator.
 
+
+
+
+
+
+
+
+
+Hill                     Expires August 14, 2017               [Page 42]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
 9.  Acknowledgements
 
    The author would like to thank Andrey Labunets, Neil Matatall and
@@ -2344,15 +2373,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
    [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
               10646", STD 63, RFC 3629, DOI 10.17487/RFC3629, November
               2003, <http://www.rfc-editor.org/info/rfc3629>.
-
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 42]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
 
    [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66, RFC
@@ -2381,6 +2401,15 @@ Internet-Draft         Delegated Account Recovery          February 2017
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
               <http://www.rfc-editor.org/info/rfc6962>.
 
+
+
+
+
+Hill                     Expires August 14, 2017               [Page 43]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
    [RFC6979]  Pornin, T., "Deterministic Usage of the Digital Signature
               Algorithm (DSA) and Elliptic Curve Digital Signature
               Algorithm (ECDSA)", RFC 6979, DOI 10.17487/RFC6979, August
@@ -2401,15 +2430,6 @@ Internet-Draft         Delegated Account Recovery          February 2017
               June 1988.
 
    [OpenID.Core]
-
-
-
-
-Hill                     Expires August 14, 2017               [Page 43]
-
-Internet-Draft         Delegated Account Recovery          February 2017
-
-
               Sakimura, N., Bradley, J., Jones, M., de Medeiros, B., and
               C. Mortimore, "OpenID Connect Core 1.0", August 2015,
               <http://openid.net/specs/openid-connect-core-1_0.html>.
@@ -2438,6 +2458,14 @@ Appendix A.  Initial Algorithm Registry Contents
    |         | named curve                      |                      |
    +---------+----------------------------------+----------------------+
 
+
+
+
+Hill                     Expires August 14, 2017               [Page 44]
+
+Internet-Draft         Delegated Account Recovery          February 2017
+
+
 Author's Address
 
    Brad Hill (editor)
@@ -2461,4 +2489,32 @@ Author's Address
 
 
 
-Hill                     Expires August 14, 2017               [Page 44]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hill                     Expires August 14, 2017               [Page 45]

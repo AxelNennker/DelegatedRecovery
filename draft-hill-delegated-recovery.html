@@ -594,16 +594,18 @@
 <p id="rfc.section.1.2.5.p.2">In this scenario an IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</p>
 <p id="rfc.section.1.2.5.p.3">The user's identifier e.g. their email address or telefon number is used at both the Service Provider and the Recovery Provider.</p>
 <p id="rfc.section.1.2.5.p.4">To implement Account Recovery the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</p>
-<p id="rfc.section.1.2.5.p.5">OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</p>
-<p id="rfc.section.1.2.5.p.6">Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</p>
-<p id="rfc.section.1.2.5.p.7">The keys are discovered using the <a href="#OpenID.Discovery">OpenID Connect Discovery Protocol</a> <cite title="NONE">[OpenID.Discovery]</cite></p>
+<p id="rfc.section.1.2.5.p.5">The OpenID Connect Code Flow as detailed in <a href="#OpenID.Core">OpenID Connect Core Section 3.1</a> <cite title="NONE">[OpenID.Core]</cite> should be used.</p>
+<p id="rfc.section.1.2.5.p.6">OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</p>
+<p id="rfc.section.1.2.5.p.7">Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</p>
+<p id="rfc.section.1.2.5.p.8">The keys are discovered using the <a href="#OpenID.Discovery">OpenID Connect Discovery Protocol</a> <cite title="NONE">[OpenID.Discovery]</cite></p>
 <h1 id="rfc.section.1.2.5.1"><a href="#rfc.section.1.2.5.1">1.2.5.1.</a> Example User Flow</h1>
 <p/>
 
 <ul>
   <li>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</li>
   <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</li>
-  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</li>
+  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the Code returned.</li>
+  <li>The Service Provider retrieves access token and id_token from the OP and validates them.</li>
   <li>Successful validation allows the user now to register new credentials with the Services Provider.</li>
 </ul>
 <h1 id="rfc.section.1.2.6"><a href="#rfc.section.1.2.6">1.2.6.</a> Federated Account Recovery</h1>
@@ -628,7 +630,8 @@
 <ul>
   <li>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</li>
   <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.  The subject (sub) of the openid request object is now the Recovery Provider provided SP specific user identitfier.</li>
-  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</li>
+  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the Code returned.</li>
+  <li>The Service Provider retrieves access token and id_token from the OP and validates them.</li>
   <li>Successful validation allows the user now to register new credentials with the Services Provider. The user is in this scenario free to choose any user id that is available at the service provider.</li>
 </ul>
 <h1 id="rfc.section.1.2.7"><a href="#rfc.section.1.2.7">1.2.7.</a> Alternate Methods</h1>

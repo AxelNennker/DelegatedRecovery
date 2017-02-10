@@ -223,6 +223,7 @@
           <t>In this scenario an IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</t>
           <t>The user's identifier e.g. their email address or telefon number is used at both the Service Provider and the Recovery Provider.</t>
           <t>To implement Account Recovery the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
+          <t>The OpenID Connect Code Flow as detailed in <xref target="OpenID.Core">OpenID Connect Core Section 3.1</xref> should be used.</t>
           <t>OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</t>
           <t>Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</t>
           <t>The keys are discovered using the <xref target="OpenID.Discovery">OpenID Connect Discovery Protocol</xref></t>
@@ -230,7 +231,8 @@
             <list style="symbols">
             <t>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</t>
             <t>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</t>
-            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</t>
+            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the Code returned.</t>
+            <t>The Service Provider retrieves access token and id_token from the OP and validates them.</t>
             <t>Successful validation allows the user now to register new credentials with the Services Provider.</t>
             </list></t>
           </section>
@@ -259,7 +261,8 @@
             <t>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</t>
             <t>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.
                The subject (sub) of the openid request object is now the Recovery Provider provided SP specific user identitfier.</t>
-            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</t>
+            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the Code returned.</t>
+            <t>The Service Provider retrieves access token and id_token from the OP and validates them.</t>
             <t>Successful validation allows the user now to register new credentials with the Services Provider. The user is in this scenario free
                to choose any user id that is available at the service provider.</t>
             </list></t>
