@@ -70,7 +70,7 @@ Table of Contents
        1.2.4.  Federated Authentication  . . . . . . . . . . . . . .   6
        1.2.5.  Federated Account Recovery using a Shared Verified
                Attribute . . . . . . . . . . . . . . . . . . . . . .   7
-       1.2.6.  Federated Account Recovery  . . . . . . . . . . . . .   9
+       1.2.6.  Federated Account Recovery  . . . . . . . . . . . . .   8
        1.2.7.  Alternate Methods . . . . . . . . . . . . . . . . . .  10
      1.3.  Relationship to Other Protocols . . . . . . . . . . . . .  10
      1.4.  Goals . . . . . . . . . . . . . . . . . . . . . . . . . .  11
@@ -420,6 +420,9 @@ Internet-Draft         Delegated Account Recovery          February 2017
    The keys are discovered using the OpenID Connect Discovery Protocol
    [OpenID.Discovery]
 
+   Federated Account Recovery using a shared verfied attribute is
+   possible without a need to setup recovery for the user
+
 1.2.5.1.  Example User Flow
 
    o  The Service Provider adds a "Password Recovery with 'Recovery
@@ -437,10 +440,7 @@ Internet-Draft         Delegated Account Recovery          February 2017
    o  Successful validation allows the user now to register new
       credentials with the Services Provider.
 
-
-
-
-
+1.2.6.  Federated Account Recovery
 
 
 
@@ -449,8 +449,6 @@ Hill                     Expires August 14, 2017                [Page 8]
 
 Internet-Draft         Delegated Account Recovery          February 2017
 
-
-1.2.6.  Federated Account Recovery
 
    As in the previous scenario the Service Provider's (own) IdP or
    OpenID Provider (OP) becomes a Client of the Recovery OP.
@@ -496,6 +494,8 @@ Internet-Draft         Delegated Account Recovery          February 2017
 
    o  The Service Provider adds a "Password Recovery with 'Recovery
       Provider'" to their Login Page.
+
+
 
 
 

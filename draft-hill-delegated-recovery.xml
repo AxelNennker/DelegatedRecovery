@@ -243,6 +243,7 @@
              OpenID Connect was designed to be simple to implement especially for Relying Parties / Clients. 
              Nevertheless libraries and SDKs are available for many programming languages and frameworks at <xref target="OIDF.Libraries"/></t>
           <t>The keys are discovered using the <xref target="OpenID.Discovery">OpenID Connect Discovery Protocol</xref></t>
+          <t>Federated Account Recovery using a shared verfied attribute is possible without a need to setup recovery for the user</t>
           <section title="Example User Flow"><t>
             <list style="symbols">
             <t>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</t>
