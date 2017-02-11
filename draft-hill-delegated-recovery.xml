@@ -190,7 +190,11 @@
         <!-- Email Recovery -->
         <section title="Federated Authentication">
           <t>Federated systems for authentication take many forms and delegate 
-          authentication to the Identity Provider. This moves the problem of users forgetting their password at the IdP.
+          authentication to an external Identity Provider. 
+          It is generally a good architectural decision for all Service Providers 
+          to separate authentication and authorization from the Service Provider's API
+          and Service implementation.
+          The Account Recovery problem of users forgetting their password is at the IdP.
           After fifteen years of widespread deployment of such systems, we see few mainstream
           services that are willing to rely exclusively on federated logins
           for a variety of reasons.
@@ -211,28 +215,38 @@
             active users are or not desire to show a competitor's logo as
             part of their login process.</t>
           </list></t>
-          <t>As upto this writing (2017) federated systems are not used for account 
+          <t>As up to this writing (2017) federated systems are not used for account 
           recovery between identity providers.</t>
           <t>Also Service Providers allowing onboarding to the service using 
           Identity Providers and then creating their own local account rarely allow users
           to recover their account by IdP login.</t>
+          <t>Although the above mentioned reasons against Federated Authentication are not applicable to Federated Account Recovery.</t>
+          <t><list style="symbols">
+            <t>The need to disclose an account at an Recovery Provider is optional at registration time.
+            Although it might be too late to reveal this relationship when the account needs recovering. So Service Providers should remind users to add recovery options when the user start valuing their account at the Service Provider.</t>
+            <t>Account Recovery should be infrequent. If the Service Provider notices that users are always using Account Recovery then this is probably a sign that Federated Authentication is not so bad as they thought.</t>
+            <t>Again Account Recovery should be infrequent and so the Recovery Provider does not learn about every login to the Service Provider.</t>
+          </list></t>
         </section>
-        <section title="Federated Account Recovery using a Common Identifier">
+        <section title="Federated Account Recovery using a Shared Verified Attribute">
           <t>Service Providers are well advised to separate authentication and authorization from the API their service provides.
           This allows them to concentrate on their API and their service while implementing authentication and authorization using available OpenID Connect libraries.</t>
           <t>In this scenario an IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</t>
-          <t>The user's identifier e.g. their email address or telefon number is used at both the Service Provider and the Recovery Provider.</t>
+          <t>The user's shared attribute e.g. their email address or telefon number is used to recover the user account.
+          Account recovery proves that user has an unique attribute at the Recovery Provider that was verified by the Recovery Provider using a method acceptable for both Recovery Provider and Service Provider.
+          Account Recovery using a common attribute like email and telefon number must prove that the user is in control of that email address or telefon number - or was in control at verification time.
+          The GSMA's Mobile Connect provides this assurance for telefon numbers.</t>
           <t>To implement Account Recovery the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
           <t>The OpenID Connect Code Flow as detailed in <xref target="OpenID.Core">OpenID Connect Core Section 3.1</xref> should be used.</t>
           <t>OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</t>
-          <t>Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</t>
+          <t>The access token and the id_token MUST be validated as of <xref target="OpenID.Core">OpenID Connect Section 3.1.3.5</xref></t>
           <t>The keys are discovered using the <xref target="OpenID.Discovery">OpenID Connect Discovery Protocol</xref></t>
           <section title="Example User Flow"><t>
             <list style="symbols">
             <t>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</t>
             <t>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</t>
-            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the Code returned.</t>
-            <t>The Service Provider retrieves access token and id_token from the OP and validates them.</t>
+            <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the OAuth2 Authorization Code is returned.</t>
+            <t>The Service Provider retrieves access token and id_token from the Recovery Provider and validates them.</t>
             <t>Successful validation allows the user now to register new credentials with the Services Provider.</t>
             </list></t>
           </section>
@@ -249,7 +263,7 @@
             <t>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</t>
             <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</t>
             <t>Successful validation allows the user now to register new credentials with the Services Provider. The major difference to the previous
-               scenario is that the Service Provider now uses OP provided SP specific user identitier as in its own user database.</t>
+               scenario is that the Service Provider now uses OP provided SP specific user identifier as in its own user database.</t>
             <t>A variant of this scenario of this flow asks the user to provide their user id before the data flows to the Recovery Provider.
                The service provider looks up this user identifier in its database and sends it and the Recovery Provider provided SP specific subject identifier
                to the Recovery provider. This makes guessing of subject identifiers and profiling of the Recovery Provider harder. The Recovery Provider 
@@ -260,7 +274,7 @@
             <list style="symbols">
             <t>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</t>
             <t>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.
-               The subject (sub) of the openid request object is now the Recovery Provider provided SP specific user identitfier.</t>
+               The subject (sub) of the OpenID request object is now the Recovery Provider provided SP specific user identitfier.</t>
             <t>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the Code returned.</t>
             <t>The Service Provider retrieves access token and id_token from the OP and validates them.</t>
             <t>Successful validation allows the user now to register new credentials with the Services Provider. The user is in this scenario free
@@ -1741,8 +1755,8 @@ countersigned_token_internals = struct {
       simply prefixing the following 26 octets to the buffer:</t>
       <figure>
         <artwork>
-[48, 89, 48, 19, 6, 7, 42, 134, 72, 206, 61, 2, 1, 6, 8, 42, 134, 72, 206,
-61, 3, 1, 7, 3, 66, 0]
+[48, 89, 48, 19, 6, 7, 42, 134, 72, 206, 61, 2, 1, 6, 8, 42, 134, 72, 
+206, 61, 3, 1, 7, 3, 66, 0]
 
 </artwork>
       </figure>

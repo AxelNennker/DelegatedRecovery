@@ -360,7 +360,7 @@
 <link href="#rfc.section.1.2.2" rel="Chapter" title="1.2.2 Password Hints"/>
 <link href="#rfc.section.1.2.3" rel="Chapter" title="1.2.3 Email Recovery"/>
 <link href="#rfc.section.1.2.4" rel="Chapter" title="1.2.4 Federated Authentication"/>
-<link href="#rfc.section.1.2.5" rel="Chapter" title="1.2.5 Federated Account Recovery using a Common Identifier"/>
+<link href="#rfc.section.1.2.5" rel="Chapter" title="1.2.5 Federated Account Recovery using a Shared Verified Attribute"/>
 <link href="#rfc.section.1.2.6" rel="Chapter" title="1.2.6 Federated Account Recovery"/>
 <link href="#rfc.section.1.2.7" rel="Chapter" title="1.2.7 Alternate Methods"/>
 <link href="#rfc.section.1.3" rel="Chapter" title="1.3 Relationship to Other Protocols"/>
@@ -482,7 +482,7 @@
 <li>1.2.2.   <a href="#rfc.section.1.2.2">Password Hints</a></li>
 <li>1.2.3.   <a href="#rfc.section.1.2.3">Email Recovery</a></li>
 <li>1.2.4.   <a href="#rfc.section.1.2.4">Federated Authentication</a></li>
-<li>1.2.5.   <a href="#rfc.section.1.2.5">Federated Account Recovery using a Common Identifier</a></li>
+<li>1.2.5.   <a href="#rfc.section.1.2.5">Federated Account Recovery using a Shared Verified Attribute</a></li>
 <li>1.2.6.   <a href="#rfc.section.1.2.6">Federated Account Recovery</a></li>
 <li>1.2.7.   <a href="#rfc.section.1.2.7">Alternate Methods</a></li>
 <li>1.3.   <a href="#rfc.section.1.3">Relationship to Other Protocols</a></li>
@@ -580,23 +580,31 @@
   <li>Email recovery flows cannot be used to recover capabilities, such as cryptographic keys, that may be necessary to use an account (e.g. a network-based file store that offers encrypted files) but which the user does not want the account provider to have access to at all times.</li>
 </ul>
 <h1 id="rfc.section.1.2.4"><a href="#rfc.section.1.2.4">1.2.4.</a> Federated Authentication</h1>
-<p id="rfc.section.1.2.4.p.1">Federated systems for authentication take many forms and delegate authentication to the Identity Provider. This moves the problem of users forgetting their password at the IdP.  After fifteen years of widespread deployment of such systems, we see few mainstream services that are willing to rely exclusively on federated logins for a variety of reasons.  </p>
+<p id="rfc.section.1.2.4.p.1">Federated systems for authentication take many forms and delegate authentication to an external Identity Provider.  It is generally a good architectural decision for all Service Providers to separate authentication and authorization from the Service Provider's API and Service implementation.  The Account Recovery problem of users forgetting their password is at the IdP.  After fifteen years of widespread deployment of such systems, we see few mainstream services that are willing to rely exclusively on federated logins for a variety of reasons.  </p>
 
 <ul>
   <li>A user may be unwilling to disclose their identity, other information, or grant permissions to a new service they have just begun to use and about which they have not yet formed an opinion of its value or trustworthiness.</li>
   <li>A service may be unwilling to depend on a third-party for access to its customer base. They may view "owning" their relationship with the customer as having business value, may have a regulatory mandate to do so, or may not want to be beholden to the availability of a third party for their most important customer interactions.</li>
   <li>A service may view providers of federated login services as competitors or potential competitors, and not wish to disclose information about how often users are logging on, who their most active users are or not desire to show a competitor's logo as part of their login process.</li>
 </ul>
-<p id="rfc.section.1.2.4.p.2">As upto this writing (2017) federated systems are not used for account recovery between identity providers.</p>
+<p id="rfc.section.1.2.4.p.2">As up to this writing (2017) federated systems are not used for account recovery between identity providers.</p>
 <p id="rfc.section.1.2.4.p.3">Also Service Providers allowing onboarding to the service using Identity Providers and then creating their own local account rarely allow users to recover their account by IdP login.</p>
-<h1 id="rfc.section.1.2.5"><a href="#rfc.section.1.2.5">1.2.5.</a> Federated Account Recovery using a Common Identifier</h1>
+<p id="rfc.section.1.2.4.p.4">Although the above mentioned reasons against Federated Authentication are not applicable to Federated Account Recovery.</p>
+<p/>
+
+<ul>
+  <li>The need to disclose an account at an Recovery Provider is optional at registration time.  Although it might be too late to reveal this relationship when the account needs recovering. So Service Providers should remind users to add recovery options when the user start valuing their account at the Service Provider.</li>
+  <li>Account Recovery should be infrequent. If the Service Provider notices that users are always using Account Recovery then this is probably a sign that Federated Authentication is not so bad as they thought.</li>
+  <li>Again Account Recovery should be infrequent and so the Recovery Provider does not learn about every login to the Service Provider.</li>
+</ul>
+<h1 id="rfc.section.1.2.5"><a href="#rfc.section.1.2.5">1.2.5.</a> Federated Account Recovery using a Shared Verified Attribute</h1>
 <p id="rfc.section.1.2.5.p.1">Service Providers are well advised to separate authentication and authorization from the API their service provides.  This allows them to concentrate on their API and their service while implementing authentication and authorization using available OpenID Connect libraries.</p>
 <p id="rfc.section.1.2.5.p.2">In this scenario an IdP or OpenID Provider (OP) becomes a Client of the Recovery OP.</p>
-<p id="rfc.section.1.2.5.p.3">The user's identifier e.g. their email address or telefon number is used at both the Service Provider and the Recovery Provider.</p>
+<p id="rfc.section.1.2.5.p.3">The user's shared attribute e.g. their email address or telefon number is used to recover the user account.  Account recovery proves that user has an unique attribute at the Recovery Provider that was verified by the Recovery Provider using a method acceptable for both Recovery Provider and Service Provider.  Account Recovery using a common attribute like email and telefon number must prove that the user is in control of that email address or telefon number - or was in control at verification time.  The GSMA's Mobile Connect provides this assurance for telefon numbers.</p>
 <p id="rfc.section.1.2.5.p.4">To implement Account Recovery the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</p>
 <p id="rfc.section.1.2.5.p.5">The OpenID Connect Code Flow as detailed in <a href="#OpenID.Core">OpenID Connect Core Section 3.1</a> <cite title="NONE">[OpenID.Core]</cite> should be used.</p>
 <p id="rfc.section.1.2.5.p.6">OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</p>
-<p id="rfc.section.1.2.5.p.7">Access Tokens MUST be validated and the signature of the id_token MUST be validated. The id_token might be encrypted</p>
+<p id="rfc.section.1.2.5.p.7">The access token and the id_token MUST be validated as of <a href="#OpenID.Core">OpenID Connect Section 3.1.3.5</a> <cite title="NONE">[OpenID.Core]</cite></p>
 <p id="rfc.section.1.2.5.p.8">The keys are discovered using the <a href="#OpenID.Discovery">OpenID Connect Discovery Protocol</a> <cite title="NONE">[OpenID.Discovery]</cite></p>
 <h1 id="rfc.section.1.2.5.1"><a href="#rfc.section.1.2.5.1">1.2.5.1.</a> Example User Flow</h1>
 <p/>
@@ -604,8 +612,8 @@
 <ul>
   <li>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</li>
   <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</li>
-  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the Code returned.</li>
-  <li>The Service Provider retrieves access token and id_token from the OP and validates them.</li>
+  <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the OAuth2 Authorization Code is returned.</li>
+  <li>The Service Provider retrieves access token and id_token from the Recovery Provider and validates them.</li>
   <li>Successful validation allows the user now to register new credentials with the Services Provider.</li>
 </ul>
 <h1 id="rfc.section.1.2.6"><a href="#rfc.section.1.2.6">1.2.6.</a> Federated Account Recovery</h1>
@@ -621,7 +629,7 @@
   <li>The Service Provider adds a "Add Password Recovery with 'Recovery Provider' to your Account" to their Registration Page.</li>
   <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.</li>
   <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint where access token and id_token are validated.</li>
-  <li>Successful validation allows the user now to register new credentials with the Services Provider. The major difference to the previous scenario is that the Service Provider now uses OP provided SP specific user identitier as in its own user database.</li>
+  <li>Successful validation allows the user now to register new credentials with the Services Provider. The major difference to the previous scenario is that the Service Provider now uses OP provided SP specific user identifier as in its own user database.</li>
   <li>A variant of this scenario of this flow asks the user to provide their user id before the data flows to the Recovery Provider.  The service provider looks up this user identifier in its database and sends it and the Recovery Provider provided SP specific subject identifier to the Recovery provider. This makes guessing of subject identifiers and profiling of the Recovery Provider harder. The Recovery Provider MUST reject all requests where user identifier and subject identifier don't match.</li>
 </ul>
 <h1 id="rfc.section.1.2.6.2"><a href="#rfc.section.1.2.6.2">1.2.6.2.</a> Example User Flow of the Recovery</h1>
@@ -629,7 +637,7 @@
 
 <ul>
   <li>The Service Provider adds a "Password Recovery with 'Recovery Provider'" to their Login Page.</li>
-  <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.  The subject (sub) of the openid request object is now the Recovery Provider provided SP specific user identitfier.</li>
+  <li>Clicking that redirects the user's user agent to the Recovery Provider where they successfully authenticate.  The subject (sub) of the OpenID request object is now the Recovery Provider provided SP specific user identitfier.</li>
   <li>The user agent is redirected to the Service Provider's new Account Recovery endpoint and the Code returned.</li>
   <li>The Service Provider retrieves access token and id_token from the OP and validates them.</li>
   <li>Successful validation allows the user now to register new credentials with the Services Provider. The user is in this scenario free to choose any user id that is available at the service provider.</li>
@@ -1287,8 +1295,8 @@ countersigned_token_internals = struct {
 <p id="rfc.section.7.p.1">This section is non-normative.</p>
 <p id="rfc.section.7.p.2">Software platforms may represent Elliptic Curve public keys differently. The configuration encoding required by this specification is the format used by OpenSSL's Elliptic Curve implementation (X9.62 / RFC 3280), which uses the alias "prime256v1" to refer to the NIST secp256r1 curve. Some software only expects a "raw" ECPoint representation as a public key. If your software's EC public key representation is 65 octets long and begins with 0x04, this is a raw ECPoint. Because they are of fixed length, these raw points can be converted to the ASN.1 encoded form required by this specification by simply prefixing the following 26 octets to the buffer:</p>
 <pre>
-[48, 89, 48, 19, 6, 7, 42, 134, 72, 206, 61, 2, 1, 6, 8, 42, 134, 72, 206,
-61, 3, 1, 7, 3, 66, 0]
+[48, 89, 48, 19, 6, 7, 42, 134, 72, 206, 61, 2, 1, 6, 8, 42, 134, 72, 
+206, 61, 3, 1, 7, 3, 66, 0]
 
 </pre>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> IANA Considerations</h1>
