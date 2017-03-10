@@ -398,8 +398,8 @@ Internet-Draft         Delegated Account Recovery          February 2017
    Recovery Provider and Service Provider.  Account Recovery using a
    common attribute like email and telefon number must prove that the
    user is in control of that email address or telefon number - or was
-   in control at verification time.  The GSMA's Mobile Connect provides
-   this assurance for telefon numbers.
+   in control at verification time.  The GSMA's Mobile Connect
+   [GSMA.Mobile.Connect] provides this assurance for telefon numbers.
 
    To implement Account Recovery the Service Provider creates a new
    endpoint (URL) that accepts access tokens and id_tokens issued by the

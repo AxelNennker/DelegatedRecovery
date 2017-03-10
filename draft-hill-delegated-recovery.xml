@@ -235,7 +235,7 @@
           <t>The user's shared attribute e.g. their email address or telefon number is used to recover the user account.
           Account recovery proves that user has an unique attribute at the Recovery Provider that was verified by the Recovery Provider using a method acceptable for both Recovery Provider and Service Provider.
           Account Recovery using a common attribute like email and telefon number must prove that the user is in control of that email address or telefon number - or was in control at verification time.
-          The GSMA's <xref target="GSMA.Mobile.Connect" format="title"></xref> provides this assurance for telefon numbers.</t>
+          The GSMA's <xref target="GSMA.Mobile.Connect">Mobile Connect</xref> provides this assurance for telefon numbers.</t>
           <t>To implement Account Recovery the Service Provider creates a new endpoint (URL) that accepts access tokens and id_tokens issued by the Recovery Provider.</t>
           <t>The OpenID Connect Code Flow as detailed in <xref target="OpenID.Core">OpenID Connect Core Section 3.1</xref> should be used.</t>
           <t>OpenID Connect request objects flowing from SP to Recovery Provider are signed and may be encrypted.</t>
